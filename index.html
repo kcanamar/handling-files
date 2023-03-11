@@ -13,10 +13,36 @@
         <button id="down">Download File</button>
     </div>
 
-    <div>
-        <input type="file"  name="file">
+    <div class="upload">
+        <label> 
+            Upload File
+            <input type="file"  name="file">
+        </label>
         <button id="up">Upload File</button>
+        <label>
+            File to be uploaded: 
+            <div id="list"></div>
+        </label>
     </div>
+    <style>
+
+        input, button, label {
+            margin: 1rem;
+            padding: 1rem;
+            background-color: blue;
+            color: white;
+            border-radius: 2rem;
+        }
+
+        input[type='file'] {
+            display: none;
+        }
+
+        .upload {
+            display: flex;
+            align-items: center;
+        }
+    </style>
 
     <script>
         // select input variables
@@ -47,7 +73,43 @@
         })
 
         up.addEventListener("click", (event) => {
-           
+            // identify all of the properties of the input[type="file"]
+            console.dir(file)
+
+            for (let f of file.files ) {
+                // create a file reader
+                const reader = new FileReader()
+    
+                // have the reader read the file
+                reader.readAsText(f) // need a loop for multiple files
+    
+                // create a reader onload listener when the file has been read
+                reader.addEventListener("load", (event) => {
+                    console.log( event.target.result)
+                })
+            }
+        })
+
+        // create event listener to display the file being uploaded
+        file.addEventListener("input", (event) => {
+            // target the list div
+            const list = document.querySelector('#list')
+
+            // cleanup the list
+            list.innerHTML = ""
+
+            // generate a name for each file in files
+            for ( let f of file.files ) {
+
+                // create p element
+                const p = document.createElement("p")
+
+                // set the text to the file name
+                p.innerText = f.name
+
+                // append p to the DOM
+                list.append(p)
+            }
         })
     </script>
 </body>
